@@ -4,7 +4,7 @@ Setup easily and quicly a typescript project with files necessary
 ## RUNNING SCRIPT
 First run : 
 ```shell
-bash tsc.sh <project_name>`
+bash typescript-setup.sh <project_name>
 ```
 
 Then start coding in `src/`
