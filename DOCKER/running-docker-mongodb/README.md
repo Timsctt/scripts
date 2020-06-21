@@ -1,9 +1,8 @@
 # MONGODB CONTAINERIZE
-===
 Run your mongodb just in one command
 
 ## PREREQUIES
-* Docker 2.*
+* Docker 15.*
 
 ## RUNNING
 ```shell

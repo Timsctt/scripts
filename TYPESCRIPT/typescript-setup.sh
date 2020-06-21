@@ -42,11 +42,3 @@ sed '/Error:/s/$/&,/;/Error:/r'<(
   echo '    "start": "npm run build && node dist/main.js",'
   echo '    "start:dev": "npm run build && nodemon --ext \".ts,.js\" --watch \"./src\" --exec \"ts-node ./src/main.ts\""'
 ) -i -- package.json
-
-
-
-
-# tu as juste a executer comme ca: bash tsc.sh <le nom du projet>
-# apres tu peux commencer a coder dans src/
-# et lancer le projet comme ca: npm run start
-# ou avec rechargement auto des que tu fais une modif comme ca npm run start:dev
