@@ -18,11 +18,10 @@ Run your mongodb just in one command
 docker-compose -f docker-compose-mongodb.yml up
 ```
 ## DO NOT FORGET <a id="dontforget"></a>
-Change access authentication
+Change access authentication in `init-mongo.js`.
 
 ### DATAS
 Your data will be synchronized on your own desktop at `~/data` 
-___
 
 #### Adding ressources in container <a id="addingressources"></a>
 First run the container, once is done copy the file or the folder that you what import  in your container : 
