@@ -41,7 +41,7 @@ The keyword for import datas is `mongoimport`. To that you ahve to specify :
   * username with which to authenticate to the MongoDB database `--username <username>` 
   * password with which to authenticate to the MongoDB database`--password password`
 
-And finaly specify your file name.\
+And finaly specify your file name.
 ```shell
 mongoimport --db <verbs> --collection <de> --authenticationDatabase <admin> --username <user> --password <password> $PATH_TO_FILE/de.json
 ```
