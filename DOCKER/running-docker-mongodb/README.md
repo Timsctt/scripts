@@ -12,6 +12,7 @@ Run your mongodb just in one command
 
 ## PREREQUIES
 * Docker 15.*
+* (Optionnal) Robo3t
 
 ## RUNNING
 ```shell
