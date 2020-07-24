@@ -18,6 +18,7 @@ Run your mongodb just in one command
 docker-compose -f docker-compose-mongodb.yml up
 ```
 ## DO NOT FORGET <a id="dontforget"></a>
+You can configure your database access within .env-exemple by rename it by `.env` and put your variables.\
 Change access authentication in `init-mongo.js`.
 
 ### DATAS
