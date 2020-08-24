@@ -1,3 +1,5 @@
+# Author kh3phr3n : https://github.com/kh3phr3n
+
 #!/bin/bash
 # Info: https://xaviergeerinck.com/post/coding/javascript/typescript-getting-started
 
