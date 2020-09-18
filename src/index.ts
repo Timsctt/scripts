@@ -1,26 +1,38 @@
-import express from "express";
+import express, { Application } from 'express';
+import bodyParser from 'body-parser';
 import Bundler from "parcel-bundler";
-import path from "path";
-import * as bodyParser from 'body-parser';
-import { connect } from "./server/database/database";
 
-connect();
+import path from 'path';
+import app from './server/config/app'
+import env from './server/database/environnement'
 
+/////// FRONT ///////
+const portClient: number = 3000;
+const appClient: Application = express();
 
-const app = express();
-const port = 3000 || process.env.PORT;
+appClient.use(bodyParser.json());
+appClient.use(bodyParser.urlencoded({ extended: true }));
 
 const bundler = new Bundler(path.join(__dirname, "../src/client/index.html"));
-app.use(bundler.middleware());
+appClient.use(bundler.middleware());
 
-app.use(bodyParser.json({
+appClient.use(bodyParser.json({
   limit: '50mb',
   verify(req: any, res, buf, encoding) {
-      req.rawBody = buf;
+    req.rawBody = buf;
   }
 }));
 
-app.listen(port, () => {
-  // tslint:disable-next-line:no-console
-  console.log(`server started at http://localhost:${port}`);
+appClient.listen(portClient, () => {
+  // console.log(`Front server on ${portClient}`);
 });
+
+/////// SERVER ///////
+const PORT = env.getPort();
+
+app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+
+app.listen(PORT, () => {
+  console.log(`Server running on ${PORT}`);
+});
+

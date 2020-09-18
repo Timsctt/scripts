@@ -8,10 +8,10 @@ export interface Measure {
 }
 
 const measureElement = (element: HTMLElement | null): Measure => ({
-  width: element?.clientWidth || 0,
-  height: element?.clientHeight || 0,
-  x: element?.offsetLeft || 0,
-  y: element?.offsetTop || 0,
+  width: element.clientWidth || 0,
+  height: element.clientHeight || 0,
+  x: element.offsetLeft || 0,
+  y: element.offsetTop || 0,
 });
 
 export default function useMeasures(refs: RefObject<HTMLElement>[]): Measure[] {

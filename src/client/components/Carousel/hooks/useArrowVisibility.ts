@@ -26,8 +26,8 @@ export default function useArrowVisibility(
     ref.current.addEventListener('resize', computeVisibility);
     ref.current.addEventListener('scroll', computeVisibility);
     return () => {
-      ref.current?.removeEventListener('resize', computeVisibility);
-      ref.current?.removeEventListener('scroll', computeVisibility);
+      ref.current.removeEventListener('resize', computeVisibility);
+      ref.current.removeEventListener('scroll', computeVisibility);
     };
   }, [ref.current, visibility]);
 

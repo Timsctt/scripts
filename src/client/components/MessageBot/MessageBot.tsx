@@ -43,7 +43,7 @@ const MessageBot: (props: MessageProps) => JSX.Element = ({
   sendAction,
 }: MessageProps) => {
   function getHtmlContent() {
-    const content = message.message?.toString() || '';
+    const content = message.message.toString() || '';
     return linkifyHtml(content);
   }
 

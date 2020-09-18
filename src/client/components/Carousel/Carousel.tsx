@@ -54,7 +54,7 @@ const Previous: StyledComponent<
   top: 0;
   bottom: 0;
   padding: 1em;
-  background: ${(props) => opacify(-0.8, props.theme.palette.background.bot)};
+  background: ${(props) => opacify(-0.8, 'white')};
   border: none;
   width: 4em;
   height: 4em;
@@ -88,7 +88,7 @@ const Next: StyledComponent<
   top: 0;
   bottom: 0;
   padding: 1em;
-  background: ${(props) => opacify(-0.8, props.theme.palette.background.bot)};
+  background: ${(props) => opacify(-0.8, 'white')};
   border: none;
   width: 4em;
   height: 4em;
@@ -117,7 +117,7 @@ const Carousel: (props: { children?: ReactElement[] }) => JSX.Element = ({
   children?: ReactElement[];
 }) => {
   const theme: TockTheme = useTheme<TockTheme>();
-  const [ref, previous, next] = useCarousel<HTMLDivElement>(children?.length);
+  const [ref, previous, next] = useCarousel<HTMLDivElement>(children.length);
   const [leftVisible, rightVisible] = useArrowVisibility(
     ref.container,
     ref.items,
@@ -127,17 +127,17 @@ const Carousel: (props: { children?: ReactElement[] }) => JSX.Element = ({
     <ButtonContainer>
       {leftVisible && (
         <Previous onClick={previous}>
-          <ArrowLeftCircle size={`calc(${theme.typography.fontSize} * 2)`} />
+          <ArrowLeftCircle size={`calc(16 * 2)`} />
         </Previous>
       )}
       <ItemContainer ref={ref.container}>
-        {children?.map((child, i) =>
+        {children.map((child, i) =>
           React.cloneElement(child, { ref: ref.items[i] }, undefined),
         )}
       </ItemContainer>
       {rightVisible && (
         <Next onClick={next}>
-          <ArrowRightCircle size={`calc(${theme.typography.fontSize} * 2)`} />
+          <ArrowRightCircle size={`calc(16 * 2)`} />
         </Next>
       )}
     </ButtonContainer>

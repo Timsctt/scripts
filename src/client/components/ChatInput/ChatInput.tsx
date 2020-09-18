@@ -44,7 +44,7 @@ const Input: StyledComponent<
   font-size: inherit;
 
   &.disabled-input {
-    background: ${prop<any>('theme.palette.background.inputDisabled')};
+    background: '#b6b4b4';
   }
 
   ${prop<any>('theme.overrides.chatInput.input', '')}

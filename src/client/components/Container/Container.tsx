@@ -13,8 +13,8 @@ const Container: StyledComponent<
   height: 100%;
   display: flex;
   flex-direction: column;
-  font-family: ${prop<any>('theme.typography.fontFamily')};
-  font-size: ${prop<any>('theme.typography.fontSize')};
+  font-family: Segoe UI, Arial, Helvetica, sans-serif;
+  font-size: 16px;
 
   & > *:first-child {
     flex: 1;
