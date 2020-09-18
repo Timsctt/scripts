@@ -24,7 +24,7 @@ appClient.use(bodyParser.json({
 }));
 
 appClient.listen(portClient, () => {
-  // console.log(`Front server on ${portClient}`);
+  console.log(`App client run on ${portClient}`);
 });
 
 /////// SERVER ///////

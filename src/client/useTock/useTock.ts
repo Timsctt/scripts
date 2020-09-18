@@ -17,7 +17,7 @@ import {
   WidgetData,
 } from './TockContext';
 import { Sse } from './Sse';
-import AccessToken, { getAccessToken }  from './AccessToken';
+import AccessToken, { getAccessToken } from './AccessToken';
 
 export interface UseTock {
   messages: (Message | Card | CalendarGraphCard | Carousel | Widget)[];
@@ -207,14 +207,35 @@ const useTock: (tockEndPoint: string) => UseTock = (tockEndPoint: string) => {
     startLoading();
     const body = payload
       ? {
-          payload,
-          userId,
-        }
+        payload,
+        userId,
+      }
       : {
-          query: message,
-          userId,
-          code: AccessToken.accessToken,
-        };
+        query: message,
+        userId,
+        code: AccessToken.accessToken,
+      };
+    const msg = JSON.stringify({
+      message: {
+        author: body.userId,
+        content: body.query,
+        receiver: "bot"
+      },
+      datetime: new Date(),
+    })
+    console.log(msg)
+    fetch('http://localhost:3001/messages', {
+      method: 'POST',
+      body: msg,
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+      .then(response => response.text())
+      .then(json => {
+        console.log(json);
+      });
+
     return fetch(tockEndPoint, {
       body: JSON.stringify(body),
       method: 'POST',

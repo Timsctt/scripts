@@ -25,9 +25,9 @@ export const allUsers = (req: Request, res: Response) => {
 export const showUser = (req: Request, res: Response) => {
     User.findById(req.params.id, (err: any, user: any) => {
         try {
-            res.send(user);
+            res.status(200).send(user);
         } catch (err) {
-            res.status(200).send(err);
+            res.send(err);
         }
     });
 };
@@ -41,9 +41,9 @@ export const addUser = (req: Request, res: Response) => {
     const user = new User(req.body);
     user.save((err: any) => {
         try {
-            res.status(200).send(err);
+            res.status(200).send(user);
         } catch (err) {
-            res.send(user);
+            res.send(err);
         }
     });
 };
@@ -79,7 +79,7 @@ export const deleteUser = (req: Request, res: Response) => {
         try {
             res.status(200).send(err);
         } catch (err) {
-            // console.log(err);
+            console.log(err);
         }
     });
 };

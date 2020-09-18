@@ -1,5 +1,5 @@
 import { Application, Request, Response } from 'express';
-import * as UserConroller from '../controllers/user.controller';
+import * as UserController from '../controllers/user.controller';
 
 /**
  * User's routes api
@@ -7,14 +7,14 @@ import * as UserConroller from '../controllers/user.controller';
 export class UsersRoutes {
     public route(app: Application) {
 
-        app.get('/users', UserConroller.allUsers);
+        app.get('/users', UserController.allUsers);
 
-        app.get("/users/:id", UserConroller.showUser);
+        app.get("/users/:id", UserController.showUser);
 
-        app.post("/users", UserConroller.addUser);
+        app.post("/users", UserController.addUser);
 
-        app.patch("/users/:id", UserConroller.updateUser);
+        app.patch("/users/:id", UserController.updateUser);
 
-        app.delete("/users/:id", UserConroller.deleteUser);
+        app.delete("/users/:id", UserController.deleteUser);
     }
 }
