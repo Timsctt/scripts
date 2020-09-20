@@ -6,10 +6,12 @@ const Schema = mongoose.Schema;
 const schema = new Schema({
     message: {
         type: {
-            author: String,
-            content: String,
-            receiver: String
-        }
+            type: String,
+            default: "text"
+        },
+        content: String,
+        author: String,
+        receiver: String
     },
     is_deleted: {
         type: Boolean,

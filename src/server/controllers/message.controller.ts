@@ -1,11 +1,13 @@
 import { Request, Response } from "express";
-import Message from "../database/modules/messages/schema";;
-import { insufficientParameters, mongoError, successResponse, failureResponse } from '../database/modules/common/service';
+import Message from "../database/modules/messages/schema";
+import BotResponse from "../database/modules/responses/schema";
+import { insufficientParameters, mongoError, successResponse, failureResponse } from "../database/modules/common/service";
+
 
 /**
  * Find one message by his id : /messages/{messageId}
- * @param req 
- * @param res 
+ * @param req
+ * @param res
  */
 export const showMessages = (req: Request, res: Response) => {
     Message.findById(req.params.id, (err: any, message: any) => {
@@ -19,25 +21,42 @@ export const showMessages = (req: Request, res: Response) => {
 
 /**
  * Add a message into the database
- * @param req 
- * @param res 
+ * @param req
+ * @param res
  */
 export const addMessages = (req: Request, res: Response) => {
-    console.log("-------> MESSSSAGGGGGE ===" + req)
+
+    console.log(req.body)
+    const response = new BotResponse(req.body);
+    console.log(response)
+
+    response.save((err: any) => {
+        try {
+            res.status(201).send(response);
+        } catch (err) {
+            console.log(err)
+            res.send(err);
+        }
+    });
+    
+    /*
     const message = new Message(req.body);
     message.save((err: any) => {
         try {
             res.status(201).send(message);
         } catch (err) {
+            console.log(err)
             res.send(err);
         }
     });
+    */
+
 };
 
 /**
  * Update a Message
- * @param req 
- * @param res 
+ * @param req
+ * @param res
  */
 export const updateMessages = (req: Request, res: Response) => {
     Message.findByIdAndUpdate(

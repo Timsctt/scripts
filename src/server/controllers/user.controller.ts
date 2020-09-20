@@ -4,8 +4,8 @@ import { insufficientParameters, mongoError, successResponse, failureResponse } 
 
 /**
  * Find all users in the database
- * @param req 
- * @param res 
+ * @param req
+ * @param res
  */
 export const allUsers = (req: Request, res: Response) => {
     User.find((err: any, users: any) => {
@@ -19,8 +19,8 @@ export const allUsers = (req: Request, res: Response) => {
 
 /**
  * Find one user by his id : /users/{userId}
- * @param req 
- * @param res 
+ * @param req
+ * @param res
  */
 export const showUser = (req: Request, res: Response) => {
     User.findById(req.params.id, (err: any, user: any) => {
@@ -34,8 +34,8 @@ export const showUser = (req: Request, res: Response) => {
 
 /**
  * Add a user into the database
- * @param req 
- * @param res 
+ * @param req
+ * @param res
  */
 export const addUser = (req: Request, res: Response) => {
     const user = new User(req.body);
@@ -50,8 +50,8 @@ export const addUser = (req: Request, res: Response) => {
 
 /**
  * Update a User
- * @param req 
- * @param res 
+ * @param req
+ * @param res
  */
 export const updateUser = (req: Request, res: Response) => {
     User.findByIdAndUpdate(
@@ -71,8 +71,8 @@ export const updateUser = (req: Request, res: Response) => {
 
 /**
  * Remove a user by his id : /users/{userId}
- * @param req 
- * @param res 
+ * @param req
+ * @param res
  */
 export const deleteUser = (req: Request, res: Response) => {
     User.deleteOne({ _id: req.params.id }, (err: any) => {

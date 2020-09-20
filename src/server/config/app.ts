@@ -6,15 +6,17 @@ import { CommonRoutes } from "../routes/common_routes";
 import { UsersRoutes } from "../routes/users_routes";
 import { MessagesRoutes } from "../routes/messages_routes";
 import environnement from "../database/environnement";
-var cors = require('cors')
+const env = require('dotenv').config()
+const cors = require('cors')
 
 /**
  * Class to load for create the Express application.
  */
 class App {
 
+    private static instance: App;
     public app: Application;
-    public mongoUrl: string = 'mongodb://localhost:' + environnement.getDBPort() + '/' + environnement.getDBName();
+    public mongoUrl: string = process.env.DB_CONNECTION + ':' + environnement.getDBPort() + '/' + environnement.getDBName();
 
     private test_routes: TestRoutes = new TestRoutes();
     private common_routes: CommonRoutes = new CommonRoutes();
@@ -36,13 +38,21 @@ class App {
         this.messages_routes.route(this.app)
         // Last route to add common
         this.common_routes.route(this.app);
-        this.app.options('/messages', cors())
+        this.app.use(cors())
     }
+
+    static getInstance(): App {
+        if (!App.instance) {
+            App.instance = new App();
+        }
+
+        return App.instance;
+      }
 
     private config(): void {
         // support application/json type post data
         this.app.use(bodyParser.json());
-        //support application/x-www-form-urlencoded post data
+        // support application/x-www-form-urlencoded post data
         this.app.use(bodyParser.urlencoded({ extended: false }));
     }
 
@@ -54,7 +64,8 @@ class App {
                 useUnifiedTopology: true,
                 useCreateIndex: true,
                 useFindAndModify: false
-            }
+            }, 
+            () => console.log('connected to the DB')
         )
     }
 }

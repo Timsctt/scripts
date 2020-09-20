@@ -96,7 +96,10 @@ const useTock: (tockEndPoint: string) => UseTock = (tockEndPoint: string) => {
     loading,
     sseInitializing,
   }: TockState = useTockState();
+
   const dispatch: Dispatch<TockAction> = useTockDispatch();
+
+  const endpointMessage: string = "http://localhost:3001/messages";
 
   const startLoading: () => void = () => {
     dispatch({
@@ -115,6 +118,7 @@ const useTock: (tockEndPoint: string) => UseTock = (tockEndPoint: string) => {
   const handleBotResponse: (botResponse: any) => void = ({
     responses,
   }: any) => {
+
     // Debug
     if (Array.isArray(responses) && responses.length > 0) {
       const lastMessage: any = responses[responses.length - 1];
@@ -177,6 +181,9 @@ const useTock: (tockEndPoint: string) => UseTock = (tockEndPoint: string) => {
     botResponse: any,
   ) => {
     if (!Sse.isEnable()) {
+      //Send the data to the database
+      doFetchPost(endpointMessage, botResponse)
+      
       handleBotResponse(botResponse);
     }
   };
@@ -215,54 +222,41 @@ const useTock: (tockEndPoint: string) => UseTock = (tockEndPoint: string) => {
         userId,
         code: AccessToken.accessToken,
       };
-    const msg = JSON.stringify({
+    const msg: Object = {
       message: {
-        author: body.userId,
+        type: "text",
         content: body.query,
+        author: body.userId,
         receiver: "bot"
       },
       datetime: new Date(),
-    })
-    console.log(msg)
-    fetch('http://localhost:3001/messages', {
-      method: 'POST',
-      body: msg,
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    })
-      .then(response => response.text())
-      .then(json => {
-        console.log(json);
-      });
+    }
+    console.log(payload)
 
-    return fetch(tockEndPoint, {
-      body: JSON.stringify(body),
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+    doFetchPost(endpointMessage, msg, payload).then(response => response.text());
+    return doFetchPost(
+      tockEndPoint,
+      body,
+      payload)
       .then((res) => res.json())
       .then(handleBotResponseIfSseDisabled)
       .finally(stopLoading);
   }, []);
 
-  const sendReferralParameter: (
-    referralParameter: string,
-  ) => void = useCallback((referralParameter: string) => {
+  const sendReferralParameter: (referralParameter: string) => void = useCallback((referralParameter: string) => {
     startLoading();
-    fetch(tockEndPoint, {
-      body: JSON.stringify({
+    console.log(JSON.stringify({
+      ref: referralParameter,
+      userId,
+    }))
+
+    const msg: Object = {
         ref: referralParameter,
         userId,
-      }),
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((res) => res.json())
+      }
+      
+    doFetchPost(endpointMessage, msg)
+    .then((res) => res.json())
       .then(handleBotResponseIfSseDisabled)
       .finally(stopLoading);
   }, []);
@@ -275,16 +269,13 @@ const useTock: (tockEndPoint: string) => UseTock = (tockEndPoint: string) => {
       setQuickReplies([]);
       addMessage(label, 'user');
       startLoading();
-      return fetch(tockEndPoint, {
-        body: JSON.stringify({
-          payload,
-          userId,
-        }),
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
+
+      let body = {
+        payload,
+        userId,
+      }
+
+      return doFetchPost(tockEndPoint, body)
         .then((res) => res.json())
         .then(handleBotResponseIfSseDisabled)
         .finally(stopLoading);
@@ -304,6 +295,27 @@ const useTock: (tockEndPoint: string) => UseTock = (tockEndPoint: string) => {
     }
     return Promise.resolve();
   };
+
+  /**
+   * Method doFetchPost permise using one method to send post 
+   * @param endpoint mandatory
+   * @param body data to be sent
+   * @param payload optional
+   * @returns Promise<Response>
+   */
+  const doFetchPost: (
+    endpoint: string, 
+    body: Object, 
+    payload?: string,
+  ) => Promise<Response> = useCallback((endpoint: string, body: Object, payload?: string) => {
+    return fetch(endpoint, {
+      method: 'POST',
+      body: JSON.stringify(body),
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+  }, []);
 
   const addCard: (
     title: string,

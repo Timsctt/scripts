@@ -23,7 +23,7 @@ import React, {
   DetailedHTMLProps,
   HTMLAttributes,
   useEffect,
-  useState,
+  useState
 } from 'react';
 import TockTheme from '../../styles/theme';
 import styled, { StyledComponent } from '@emotion/styled';
@@ -69,6 +69,7 @@ export const Container: StyledComponent<
   min-height: 430px;
   overflow: hidden;
   font-family: 'Inter', sans-serif;
+  background-color: white;
 
   ${prop<any>('theme.overrides.card.cardContainer', '')};
 `;
@@ -187,8 +188,8 @@ const Chat: (props: ChatProps) => JSX.Element = ({
                           sendAction={sendAction}
                         />
                       ) : (
-                        <MessageUser key={i}>{message.message}</MessageUser>
-                      );
+                          <MessageUser key={i}>{message.message}</MessageUser>
+                        );
                     } else if (message.type === 'card') {
                       return (
                         <CardComponent
@@ -209,11 +210,11 @@ const Chat: (props: ChatProps) => JSX.Element = ({
                                   {...card}
                                 />
                               ) : (
-                                <CalendarGraphCardComponent
-                                  key={ic}
-                                  {...card}
-                                />
-                              ),
+                                  <CalendarGraphCardComponent
+                                    key={ic}
+                                    {...card}
+                                  />
+                                ),
                           )}
                         </CarouselComponent>
                       );

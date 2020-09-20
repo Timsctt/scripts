@@ -3,8 +3,9 @@ import { ModificationNote } from "../common/model";
 export interface IMessage {
     _id?: String;
     message: {
-        author: String;
+        type: string,
         query: String;
+        author: String;
         receiver: String;
     };
     datetime: Date;

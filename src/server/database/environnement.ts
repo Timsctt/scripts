@@ -2,7 +2,7 @@ enum Environments {
     local_environment = 'local',
     dev_environment = 'dev',
     prod_environment = 'prod',
-    //Quality Assurance
+    // Quality Assurance
     qa_environment = 'qa'
 }
 
