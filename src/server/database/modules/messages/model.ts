@@ -1,7 +1,7 @@
+import { Document } from "mongoose";
 import { ModificationNote } from "../common/model";
 
-export interface IMessage {
-    _id?: String;
+export interface IMessage extends Document {
     message: {
         type: string,
         query: String;

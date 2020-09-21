@@ -1,5 +1,6 @@
 import * as mongoose from 'mongoose';
 import { ModificationNote } from '../common/model';
+import { IMessage } from './model'
 
 const Schema = mongoose.Schema;
 
@@ -24,4 +25,4 @@ const schema = new Schema({
     modification_notes: [ModificationNote]
 });
 
-export default mongoose.model('messages', schema);
+export default mongoose.model<IMessage>('messages', schema);

@@ -9,7 +9,7 @@ export class MessagesRoutes {
 
         // No routes for getAll and delete
 
-        app.get("/messages/:id", MessageController.showMessages);
+        app.get("/messages/:userId", MessageController.showMessages);
 
         app.post("/messages", MessageController.addMessages);
 

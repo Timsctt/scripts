@@ -7,7 +7,7 @@ import React, {
   useRef,
 } from 'react';
 
-import TockTheme from '../../styles/theme';
+import TockTheme from '../../../styles/theme';
 
 const MainContainer: StyledComponent<
   DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>,

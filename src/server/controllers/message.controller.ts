@@ -1,16 +1,16 @@
 import { Request, Response } from "express";
-import Message from "../database/modules/messages/schema";
-import BotResponse from "../database/modules/responses/schema";
+import Message from "../database/modules/responses/schema";
 import { insufficientParameters, mongoError, successResponse, failureResponse } from "../database/modules/common/service";
 
 
 /**
- * Find one message by his id : /messages/{messageId}
+ * Find one message by his id : /messages/{userId}
  * @param req
  * @param res
  */
 export const showMessages = (req: Request, res: Response) => {
-    Message.findById(req.params.id, (err: any, message: any) => {
+
+    Message.find().where('owner').equals(req.params.userId).limit(10).exec((err: any, message: any) => {
         try {
             res.status(200).send(message);
         } catch (err) {
@@ -27,7 +27,7 @@ export const showMessages = (req: Request, res: Response) => {
 export const addMessages = (req: Request, res: Response) => {
 
     console.log(req.body)
-    const response = new BotResponse(req.body);
+    const response = new Message(req.body);
     console.log(response)
 
     response.save((err: any) => {
@@ -38,18 +38,6 @@ export const addMessages = (req: Request, res: Response) => {
             res.send(err);
         }
     });
-    
-    /*
-    const message = new Message(req.body);
-    message.save((err: any) => {
-        try {
-            res.status(201).send(message);
-        } catch (err) {
-            console.log(err)
-            res.send(err);
-        }
-    });
-    */
 
 };
 

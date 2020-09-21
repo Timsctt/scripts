@@ -3,12 +3,14 @@ import bodyParser from 'body-parser';
 import Bundler from "parcel-bundler";
 
 import path from 'path';
-import app from './server/config/app'
-import env from './server/database/environnement'
+import app from './server/config/app';
+import env from './server/database/environnement';
+
 
 /////// FRONT ///////
 const portClient: number = 3000;
 const appClient: Application = express();
+
 
 appClient.use(bodyParser.json());
 appClient.use(bodyParser.urlencoded({ extended: true }));

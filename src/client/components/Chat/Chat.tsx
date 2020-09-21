@@ -136,6 +136,7 @@ const Chat: (props: ChatProps) => JSX.Element = ({
     sendQuickReply,
     sendAction,
     sendReferralParameter,
+    loadMessages,
     sseInitPromise,
     sseInitializing,
   }: UseTock = useTock(endPoint);
@@ -143,6 +144,7 @@ const Chat: (props: ChatProps) => JSX.Element = ({
 
   useEffect(() => {
     if (referralParameter) {
+      loadMessages()
       sseInitPromise.then(() => sendReferralParameter(referralParameter));
     }
   }, [sendReferralParameter, referralParameter]);

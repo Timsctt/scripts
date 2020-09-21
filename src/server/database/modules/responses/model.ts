@@ -1,5 +1,7 @@
-import { Response } from "../response/model";
+import { Document } from "mongoose"
 
-export interface Responses{
-    responses: [Response]
+export interface IDialog extends Document {
+    responses?: [Object];
+    message?: Object;
+    date: Date;
 }

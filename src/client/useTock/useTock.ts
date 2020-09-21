@@ -18,11 +18,14 @@ import {
 } from './TockContext';
 import { Sse } from './Sse';
 import AccessToken, { getAccessToken } from './AccessToken';
+import { resolve } from 'path';
+import e, { response } from 'express';
 
 export interface UseTock {
   messages: (Message | Card | CalendarGraphCard | Carousel | Widget)[];
   quickReplies: QuickReply[];
   loading: boolean;
+  loadMessages: () => void;
   addMessage: (
     message: string,
     author: 'bot' | 'user',
@@ -115,12 +118,69 @@ const useTock: (tockEndPoint: string) => UseTock = (tockEndPoint: string) => {
     });
   };
 
+
+  const loadMessages: () => void = () => {
+    fetch("http://localhost:3001/messages/" + userId)
+    .then(responses => responses.json())
+    .then(function(responses) {
+
+      responses.forEach(responses => {
+        if(responses["responses"].length > 0 ) {
+          const lastMessage: any = responses["responses"][responses["responses"].length - 1];
+          console.log(responses["responses"])
+          dispatch({
+            type: 'ADD_MESSAGE',
+            messages: responses["responses"].map(({ text, card, calendarGraphCard, carousel, widget }: any) => {
+              if (widget) {
+                return {
+                  widgetData: widget,
+                  type: 'widget',
+                };
+              } else if (text) {
+                return {
+                  author: 'bot',
+                  message: text,
+                  type: 'message',
+                  buttons: (lastMessage.buttons || [])
+                    .filter((button: any) => button.type !== 'quick_reply')
+                    .map(mapButton),
+                } as Message;
+              } else if (card) {
+                return mapCard(card);
+              } else if (calendarGraphCard) {
+                return mapCalendarGraphCard(calendarGraphCard);
+              } else {
+                if (carousel.cards[0].subject != null) {
+                  return {
+                    cards: carousel.cards.map(mapCalendarGraphCard),
+                    type: 'carousel',
+                  } as Carousel;
+                } else {
+                  return {
+                    cards: carousel.cards.map(mapCard),
+                    type: 'carousel',
+                  } as Carousel;
+                }
+              }
+            }),
+          })
+        } else {
+          dispatch({
+            type: 'ADD_MESSAGE',
+            messages: [{
+              author: 'user',
+              message: responses["message"]["content"],
+              type: 'message',
+            } as Message]
+          })
+        } // end else
+      }) // end forEach
+    }) // end then()
+  }
+
   const handleBotResponse: (botResponse: any) => void = ({
     responses,
   }: any) => {
-
-    // Debug
-    if (Array.isArray(responses) && responses.length > 0) {
       const lastMessage: any = responses[responses.length - 1];
       if (lastMessage.buttons && lastMessage.buttons.length > 0) {
         dispatch({
@@ -174,17 +234,19 @@ const useTock: (tockEndPoint: string) => UseTock = (tockEndPoint: string) => {
           },
         ),
       });
-    }
   };
 
   const handleBotResponseIfSseDisabled: (botResponse: any) => void = (
     botResponse: any,
   ) => {
     if (!Sse.isEnable()) {
-      //Send the data to the database
-      doFetchPost(endpointMessage, botResponse)
-      
+      console.log("oui")
       handleBotResponse(botResponse);
+    
+      //adding the owner of the responsebot
+      //Send the data to the database
+      botResponse["owner"] = userId
+      doFetchPost(endpointMessage, botResponse)
     }
   };
 
@@ -226,12 +288,10 @@ const useTock: (tockEndPoint: string) => UseTock = (tockEndPoint: string) => {
       message: {
         type: "text",
         content: body.query,
-        author: body.userId,
-        receiver: "bot"
       },
+      owner: body.userId,
       datetime: new Date(),
     }
-    console.log(payload)
 
     doFetchPost(endpointMessage, msg, payload).then(response => response.text());
     return doFetchPost(
@@ -245,10 +305,6 @@ const useTock: (tockEndPoint: string) => UseTock = (tockEndPoint: string) => {
 
   const sendReferralParameter: (referralParameter: string) => void = useCallback((referralParameter: string) => {
     startLoading();
-    console.log(JSON.stringify({
-      ref: referralParameter,
-      userId,
-    }))
 
     const msg: Object = {
         ref: referralParameter,
@@ -436,6 +492,7 @@ const useTock: (tockEndPoint: string) => UseTock = (tockEndPoint: string) => {
     sendQuickReply,
     sendAction,
     sendReferralParameter,
+    loadMessages,
     sseInitPromise,
     sseInitializing,
   };
