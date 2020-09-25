@@ -16,7 +16,7 @@ class App {
 
     private static instance: App;
     public app: Application;
-    public mongoUrl: string = process.env.DB_CONNECTION + ':' + environnement.getDBPort() + '/' + environnement.getDBName();
+    public mongoUrl: string = process.env.DB_CONNECTION_HEADER + process.env.DB_CONNECTION_USERNAME + ":" + process.env.DB_CONNECTION_PASSWORD + "@" + process.env.DB_CONNECTION_GETEWAY + ':' + environnement.getDBPort() + '/' + environnement.getDBName() + "?authSource=admin";
 
     private test_routes: TestRoutes = new TestRoutes();
     private common_routes: CommonRoutes = new CommonRoutes();

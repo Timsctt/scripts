@@ -1,8 +1,7 @@
-import { ObjectId } from "mongodb";
-import { Document } from "mongoose";
+import { Document } from "mongoose"
 
 export interface IDialog extends Document {
-    owner: String;
-    dialogId: ObjectId;
+    responses?: [Object];
+    message?: Object;
     date: Date;
 }

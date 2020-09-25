@@ -18,8 +18,6 @@ import {
 } from './TockContext';
 import { Sse } from './Sse';
 import AccessToken, { getAccessToken } from './AccessToken';
-import { resolve } from 'path';
-import e, { response } from 'express';
 
 export interface UseTock {
   messages: (Message | Card | CalendarGraphCard | Carousel | Widget)[];
@@ -263,6 +261,7 @@ const useTock: (tockEndPoint: string) => UseTock = (tockEndPoint: string) => {
     [],
   );
 
+  //Todo bien le placer
   getAccessToken();
 
   const sendMessage: (

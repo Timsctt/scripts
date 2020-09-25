@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Message from "../database/modules/responses/schema";
+import Message from "../database/modules/dialog/schema";
 import { insufficientParameters, mongoError, successResponse, failureResponse } from "../database/modules/common/service";
 
 

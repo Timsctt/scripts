@@ -9,7 +9,7 @@ function App() {
     <div>
     <TockContext>
       <Chat
-        endPoint="http://a32b23d32f52.ngrok.io/io/app/truc_test/web"
+        endPoint="http://7afdf60ce1d5.ngrok.io/io/app/truc_test/web"
         referralParameter='referralParameter'
         timeoutBetweenMessage={1.5}
       />
