@@ -11,7 +11,7 @@ services:
     volumes:
       - ~/db/postgre/data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5432:5432" # local:machine
 
   pgadmin:
     image: dpage/pgadmin4
@@ -23,9 +23,6 @@ services:
       - postgres
     depends_on:
       - postgres
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: password
     volumes:
       - ~/db/pgadmin/data:/var/lib/postgresql/data
     ports:
