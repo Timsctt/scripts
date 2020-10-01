@@ -127,7 +127,7 @@ const Carousel: (props: { children?: ReactElement[] }) => JSX.Element = ({
     <ButtonContainer>
       {leftVisible && (
         <Previous onClick={previous}>
-          <ArrowLeftCircle size={`calc(16 * 2)`} />
+          <ArrowLeftCircle size={16 * 2}/>
         </Previous>
       )}
       <ItemContainer ref={ref.container}>
@@ -137,7 +137,7 @@ const Carousel: (props: { children?: ReactElement[] }) => JSX.Element = ({
       </ItemContainer>
       {rightVisible && (
         <Next onClick={next}>
-          <ArrowRightCircle size={`calc(16 * 2)`} />
+          <ArrowRightCircle size={16 * 2} />
         </Next>
       )}
     </ButtonContainer>

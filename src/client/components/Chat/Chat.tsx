@@ -18,6 +18,7 @@ import QuickReplyList from '../QuickReplyList';
 import Loader from '../Loader';
 import DefaultWidget from '../widgets/DefaultWidget';
 import CalendarGraphCardComponent from '../CalendarGraphCard';
+import Header from '../Header/index';
 
 import React, {
   DetailedHTMLProps,
@@ -29,13 +30,14 @@ import TockTheme from '../../styles/theme';
 import styled, { StyledComponent } from '@emotion/styled';
 import { prop } from 'styled-tools';
 import MainConversation from '../Main/components/MainConversation';
-import Launcher from '../Launcher';
 
 export interface ChatProps {
   endPoint: string;
   referralParameter?: string;
   timeoutBetweenMessage?: number;
   widgets?: any;
+  title: string;
+  showChat: boolean;
 }
 
 export const ChatApp: StyledComponent<
@@ -45,9 +47,7 @@ export const ChatApp: StyledComponent<
 > = styled.div`
   display: flex;
   flex-direction: column;
-  position: fixed;
-  right: 1%;
-  bottom: 1%;
+  width: 370px;
 
   ${prop<any>('theme.overrides.card.cardContainer', '')};
 `;
@@ -60,11 +60,8 @@ export const Container: StyledComponent<
   display: flex;
   flex-direction: column;
   border-radius: 10px;
-  box-shadow: 0px 2px 10px 1px #b5b5b5;
-  width: 20em;
-  position: fixed;
-  right: 1%;
-  bottom: 1%;
+  box-shadow: 0 1px 1.5px -1px rgba(0, 0, 0, 0.048), 0 2.5px 3.7px -1px rgba(0, 0, 0, 0.069), 0 5px 7px -1px rgba(0, 0, 0, 0.085), 0 9.7px 12.5px -1px rgba(0, 0, 0, 0.101), 0 19.7px 23.4px -1px rgba(0, 0, 0, 0.122), 0 54px 56px -1px rgba(0, 0, 0, 0.17);
+  width: 100%;
   max-height: 60%;
   min-height: 430px;
   overflow: hidden;
@@ -96,37 +93,14 @@ export const MainContainer: StyledComponent<
   flex: 1;
 `;
 
-export const HeaderContainer: StyledComponent<
-  DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>,
-  unknown,
-  TockTheme
-> = styled.div`
-  background-color: #6aa617;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-  box-shadow: -5px 2px 19px -4px black;
-  min-height: 55px;
-  font-family: 'Inter', sans-serif;
-  position: relative;
-  z-index: 1;
-  .#{$namespace}avatar {
-    all: initial;
-    height: 31px;
-    width: 31px;
-    position: absolute;
-    top: 12px;
-    left: 14px;
-  }
-`;
 
 const Chat: (props: ChatProps) => JSX.Element = ({
   endPoint,
   referralParameter,
   timeoutBetweenMessage = 700,
   widgets = {},
+  title,
+  showChat
 }: ChatProps) => {
   const {
     messages,
@@ -158,99 +132,97 @@ const Chat: (props: ChatProps) => JSX.Element = ({
   }, [messages, displayableMessageCount]);
 
   return (
-    <div className="class">
-      <ChatApp>
-        <Container>
-          <HeaderContainer>Chatbot MGEN</HeaderContainer>
-          <MainConversation>
-            <Conversation className="conversation">
-              {messages
-                .slice(0, displayableMessageCount)
-                .map(
-                  (
-                    message:
-                      | Message
-                      | Card
-                      | CalendarGraphCard
-                      | Carousel
-                      | Widget,
-                    i: number,
-                  ) => {
-                    if (message.type === 'widget') {
-                      const WidgetComponent =
-                        widgets[message.widgetData.type] || DefaultWidget;
-                      return (
-                        <WidgetComponent key={i} {...message.widgetData.data} />
+    // carousel's arrows need context to be initialized
+    <ChatApp style={{visibility: showChat ? 'unset' : 'hidden' }}>
+      <Container>
+        <Header 
+          title={title}
+          fullScreen={false}
+        />
+        <MainConversation>
+          <Conversation className="conversation">
+            {messages
+              .slice(0, displayableMessageCount)
+              .map(
+                (
+                  message:
+                    | Message
+                    | Card
+                    | CalendarGraphCard
+                    | Carousel
+                    | Widget,
+                  i: number,
+                ) => {
+                  if (message.type === 'widget') {
+                    const WidgetComponent =
+                      widgets[message.widgetData.type] || DefaultWidget;
+                    return (
+                      <WidgetComponent key={i} {...message.widgetData.data} />
+                    );
+                  } else if (message.type === 'message') {
+                    return message.author === 'bot' ? (
+                      <MessageBot
+                        key={i}
+                        message={message}
+                        sendAction={sendAction}
+                      />
+                    ) : (
+                        <MessageUser key={i}>{message.message}</MessageUser>
                       );
-                    } else if (message.type === 'message') {
-                      return message.author === 'bot' ? (
-                        <MessageBot
-                          key={i}
-                          message={message}
-                          sendAction={sendAction}
-                        />
-                      ) : (
-                          <MessageUser key={i}>{message.message}</MessageUser>
-                        );
-                    } else if (message.type === 'card') {
-                      return (
-                        <CardComponent
-                          sendAction={sendAction}
-                          key={i}
-                          {...message}
-                        />
-                      );
-                    } else if (message.type === 'carousel') {
-                      return (
-                        <CarouselComponent key={i}>
-                          {message.cards.map(
-                            (card: Card | CalendarGraphCard, ic: number) =>
-                              card.type == 'card' ? (
-                                <CardComponent
-                                  sendAction={sendAction}
+                  } else if (message.type === 'card') {
+                    return (
+                      <CardComponent
+                        sendAction={sendAction}
+                        key={i}
+                        {...message}
+                      />
+                    );
+                  } else if (message.type === 'carousel') {
+                    return (
+                      <CarouselComponent key={i}>
+                        {message.cards.map(
+                          (card: Card | CalendarGraphCard, ic: number) =>
+                            card.type == 'card' ? (
+                              <CardComponent
+                                sendAction={sendAction}
+                                key={ic}
+                                {...card}
+                              />
+                            ) : (
+                                <CalendarGraphCardComponent
                                   key={ic}
                                   {...card}
                                 />
-                              ) : (
-                                  <CalendarGraphCardComponent
-                                    key={ic}
-                                    {...card}
-                                  />
-                                ),
-                          )}
-                        </CarouselComponent>
-                      );
-                    }
-                    return null;
-                  },
-                )}
-              {loading && <Loader />}
-            </Conversation>
-          </MainConversation>
-          <footer>
-            {displayableMessageCount === messages.length && (
-              <QuickReplyList>
-                {quickReplies.map((qr: QuickReply, i: number) => (
-                  <QR
-                    key={i}
-                    onClick={sendQuickReply.bind(null, qr.label, qr.payload)}
-                  >
-                    {qr.label}
-                  </QR>
-                ))}
-              </QuickReplyList>
-            )}
-            <SenderContainer>
-              <ChatInput disabled={sseInitializing} onSubmit={sendMessage} />
-            </SenderContainer>
-          </footer>
-        </Container>
-        <Launcher
-          openLabel="conversation opened"
-          closeLabel="conversation closed"
-        />
-      </ChatApp>
-    </div>
+                              ),
+                        )}
+                      </CarouselComponent>
+                    );
+                  }
+                  return null;
+                },
+              )}
+            {loading && <Loader />}
+          </Conversation>
+        </MainConversation>
+        <footer>
+          {displayableMessageCount === messages.length && (
+            <QuickReplyList>
+              {quickReplies.map((qr: QuickReply, i: number) => (
+                <QR
+                  key={i}
+                  onClick={sendQuickReply.bind(null, qr.label, qr.payload)}
+                >
+                  {qr.label}
+                </QR>
+              ))}
+            </QuickReplyList>
+          )}
+          <SenderContainer>
+            <ChatInput disabled={sseInitializing} onSubmit={sendMessage} />
+          </SenderContainer>
+        </footer>
+      </Container>
+    </ChatApp>
   );
 };
 

@@ -15,6 +15,7 @@ import {
   useTockState,
   Widget,
   WidgetData,
+  BehaviorState
 } from './TockContext';
 import { Sse } from './Sse';
 import AccessToken, { getAccessToken } from './AccessToken';
@@ -23,6 +24,7 @@ export interface UseTock {
   messages: (Message | Card | CalendarGraphCard | Carousel | Widget)[];
   quickReplies: QuickReply[];
   loading: boolean;
+  behavior: BehaviorState
   loadMessages: () => void;
   addMessage: (
     message: string,
@@ -96,6 +98,7 @@ const useTock: (tockEndPoint: string) => UseTock = (tockEndPoint: string) => {
     userId,
     loading,
     sseInitializing,
+    behavior,
   }: TockState = useTockState();
 
   const dispatch: Dispatch<TockAction> = useTockDispatch();
@@ -125,7 +128,6 @@ const useTock: (tockEndPoint: string) => UseTock = (tockEndPoint: string) => {
       responses.forEach(responses => {
         if(responses["responses"].length > 0 ) {
           const lastMessage: any = responses["responses"][responses["responses"].length - 1];
-          console.log(responses["responses"])
           dispatch({
             type: 'ADD_MESSAGE',
             messages: responses["responses"].map(({ text, card, calendarGraphCard, carousel, widget }: any) => {
@@ -238,7 +240,6 @@ const useTock: (tockEndPoint: string) => UseTock = (tockEndPoint: string) => {
     botResponse: any,
   ) => {
     if (!Sse.isEnable()) {
-      console.log("oui")
       handleBotResponse(botResponse);
     
       //adding the owner of the responsebot
@@ -470,6 +471,17 @@ const useTock: (tockEndPoint: string) => UseTock = (tockEndPoint: string) => {
     [],
   );
 
+  /*
+  const toggleChat: (state: string) => void = useCallback(
+    (state: number) =>
+      dispatch({
+        type: 'SET_STYLE',
+
+      }),
+    [],
+  );
+  */
+
   const sseInitPromise = Sse.init(
     tockEndPoint,
     userId,
@@ -494,6 +506,7 @@ const useTock: (tockEndPoint: string) => UseTock = (tockEndPoint: string) => {
     loadMessages,
     sseInitPromise,
     sseInitializing,
+    behavior
   };
 };
 

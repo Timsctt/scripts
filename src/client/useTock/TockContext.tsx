@@ -8,6 +8,7 @@ import React, {
   useContext,
 } from 'react';
 import { retrieveUserId } from './utils';
+import * as actionTypes from './actionTypes';
 
 export const TockStateContext: Context<TockState | undefined> = createContext<
   TockState | undefined
@@ -179,7 +180,8 @@ export interface TockAction {
     | 'SET_QUICKREPLIES'
     | 'ADD_MESSAGE'
     | 'SET_LOADING'
-    | 'SET_SSE_INITIALIZING';
+    | 'SET_SSE_INITIALIZING'
+    | 'SET_STYLE';
   quickReplies?: QuickReply[];
   messages?: (Message | Card | CalendarGraphCard | Carousel | Widget)[];
   loading?: boolean;
@@ -240,7 +242,7 @@ const TockContext: (props: { children?: ReactNode }) => JSX.Element = ({
       quickReplies: [],
       messages: [],
       userId: retrieveUserId(),
-      loading: false,
+      loading: true,
       sseInitializing: false,
       behavior: {
         showChat: true,

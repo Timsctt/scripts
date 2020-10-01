@@ -109,7 +109,7 @@ const ChatInput: (props: ChatInputProps) => JSX.Element = ({
         onChange={({ target: { value } }) => setValue(value)}
       />
       <Icon>
-        <Send size={`calc(16 * 1.5)`} />
+        <Send size={16 * 1.5} />
       </Icon>
     </InputOuterContainer>
   );

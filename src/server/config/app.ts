@@ -64,7 +64,7 @@ class App {
                 useUnifiedTopology: true,
                 useCreateIndex: true,
                 useFindAndModify: false
-            }, 
+            },
             () => console.log('connected to the DB')
         )
     }

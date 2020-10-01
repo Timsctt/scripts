@@ -1,3 +1,4 @@
+/* LAUNCHER */
 .mgen-launcher {
     animation-delay: 0;
     animation-duration: 0.5s;
@@ -29,6 +30,53 @@
     animation-duration: 0.5s;
     animation-name: rotation-lr;
 }
+
+
+/* CHAT */
+.appContainer {
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    margin: 0 20px 20px 0;
+    position: fixed;
+    right: 0;
+    width: auto;
+    z-index: 9999;
+    align-items: flex-end;
+    justify-content: flex-end;
+    /* display: flex;
+    flex-direction: column; */
+}
+
+    /* Header */
+    .header-chat {
+        background-color: #6aa617;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        box-shadow: -5px 2px 19px -4px black;
+        min-height: 55px;
+        font-family: 'Inter', sans-serif;
+        position: relative;
+        z-index: 1;
+    }
+
+    .toggle-fullscreen-button {
+        position: absolute;
+        right: 10px;
+        display: flex;
+        flex-direction: row;
+    }
+
+    .toggle-fullscreen-button > button {
+        display: inline-block;
+        background-color: transparent;
+        border: 0;
+        width: 40px;
+        cursor: pointer;
+    }
 
 @media screen and (max-width: 800px){
     .mgen-launcher {
