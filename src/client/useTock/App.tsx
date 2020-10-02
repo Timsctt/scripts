@@ -5,7 +5,7 @@ import Chat from '../components/Chat';
 import Launcher from '../components/Launcher';
 
 type Props = {
-  toggleFullScreen: boolean;
+  fullScreen: boolean;
 };
 
 export default class App extends React.Component<Props, any>{
@@ -17,11 +17,21 @@ export default class App extends React.Component<Props, any>{
       isHidden: true,
       behavior: {
         showChat: false,
-        disabledInput: true
-      }
+        disabledInput: true,
+      },
+      fullScreen: false,
     };
 
     this.toggleHidden = this.toggleHidden.bind(this);
+    this.toggleFullScreen = this.toggleFullScreen.bind(this);
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', () => {
+        this.setState({
+          fullScreen: window.innerWidth < 800
+        });
+    }, true);
   }
 
   toggleHidden() {
@@ -32,9 +42,17 @@ export default class App extends React.Component<Props, any>{
     })
   }
 
+  toggleFullScreen() {
+    this.setState({
+      fullScreen: !this.state.fullScreen
+    }), (
+      console.log(this.state.fullScreen)
+    )
+  }
+
   render() {
     return (
-      <div className="appContainer">
+      <div className={`app-container mgen-chat-module ${this.state.fullScreen? "mgen-chat-fullscreen" : "app-container-reduce"}`}>
         <TockContext>
           <Chat
             endPoint="http://7afdf60ce1d5.ngrok.io/io/app/truc_test/web"
@@ -42,17 +60,20 @@ export default class App extends React.Component<Props, any>{
             timeoutBetweenMessage={1.5}
             title="Chatbot MGEN"
             showChat={this.state.behavior.showChat}
+            fullScreen={this.state.fullScreen}
+            toggleFullScreen={this.toggleFullScreen}
+            toggleChat={this.toggleHidden}
           />
-          <Launcher
-            openLabel="conversation opened"
-            closeLabel="conversation closed"
+          {!this.state.behavior.showChat && !this.state.fullScreen && <Launcher
+            launcherLabel={this.state.behavior.showChat}
             showChat={this.toggleHidden}
+            fullScreen={this.state.fullScreen}
             /*
             badge={props.badge}
             fullScreenMode={props.fullScreenMode}
             tooltipPayload={props.tooltipPayload}
             */
-          />
+          />}
         </TockContext>
       </div>
     )

@@ -18,8 +18,6 @@ const MainContainer: StyledComponent<
   overflow-y: scroll;
   overflow-x: hidden;
   flex: 1;
-  height: 510px;
-  max-height: 50vh;
 `;
 
 const MainConversation: (
