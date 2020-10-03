@@ -4,8 +4,7 @@ import App from './useTock/App';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App 
-    toggleFullScreen={true}/>
+    <App />
   </React.StrictMode>,
   document.getElementById('appchat')
 );

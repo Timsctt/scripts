@@ -17,8 +17,8 @@ export { default as MessageUser } from '../components/MessageUser';
 export { default as QuickReply } from '../components/QuickReply';
 export { default as QuickReplyList } from '../components/QuickReplyList';
 export { default as TockContext } from './TockContext';
-export { UseTock } from './useTock'
-export { default as useTock } from './useTock';
+export { IUseTock } from './useTock'
+export { default as UseTock } from './useTock';
 export { default as createTheme } from '../styles/createTheme';
 export type TockTheme = _TockTheme;
 export type TockOptions = _TockOptions;

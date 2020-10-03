@@ -4,9 +4,9 @@ import {
   Message,
   QuickReply,
   Widget,
-  CalendarGraphCard,
+  CalendarGraphCard, TockState
 } from '../../useTock/TockContext';
-import { useTock, UseTock } from '../../useTock/rollup';
+import { UseTock, IUseTock } from '../../useTock/rollup';
 import CardComponent from '../Card';
 import CarouselComponent from '../Carousel';
 import ChatInput from '../ChatInput';
@@ -84,10 +84,11 @@ export const MainContainer: StyledComponent<
 `;
 
 
+
 const Chat: (props: ChatProps) => JSX.Element = ({
   endPoint,
   referralParameter,
-  timeoutBetweenMessage = 700,
+  timeoutBetweenMessage,
   widgets = {},
   title,
   showChat,
@@ -106,7 +107,7 @@ const Chat: (props: ChatProps) => JSX.Element = ({
     loadMessages,
     sseInitPromise,
     sseInitializing,
-  }: UseTock = useTock(endPoint);
+  }: IUseTock = UseTock(endPoint);
   const [displayableMessageCount, setDisplayableMessageCount] = useState(0);
 
   useEffect(() => {
@@ -122,13 +123,12 @@ const Chat: (props: ChatProps) => JSX.Element = ({
         setDisplayableMessageCount(displayableMessageCount + 1);
       }, timeoutBetweenMessage);
     }
-  }, [messages, displayableMessageCount]);
+  }, [messages, displayableMessageCount]); 
 
   return (
     // carousel's arrows need context to be initialized
     <Container
-      style={{visibility: showChat ? 'unset' : 'hidden', zIndex: showChat ? 1 : -1 } }
-      className={`mgen-chat-module ${fullScreen? "mgen-chat-fullscreen" : "mgen-chat-reduce"}`}
+      className={`mgen-chat-module ${fullScreen? "mgen-chat-fullscreen" : "mgen-chat-reduce"} ${showChat? "scale-up-br" : "scale-down-br"}`}
     >
       <Header 
         title={title}
@@ -219,7 +219,7 @@ const Chat: (props: ChatProps) => JSX.Element = ({
         </SenderContainer>
       </footer>
     </Container>
-  );
+    )
 };
 
 export default Chat;

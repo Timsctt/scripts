@@ -1,11 +1,11 @@
-import React from 'react';
-import TockContext from './TockContext';
+import React, { ReactNode } from 'react';
+import TockContext, { TockState } from './TockContext';
 
 import Chat from '../components/Chat';
 import Launcher from '../components/Launcher';
 
 type Props = {
-  fullScreen: boolean;
+  
 };
 
 export default class App extends React.Component<Props, any>{
@@ -22,6 +22,8 @@ export default class App extends React.Component<Props, any>{
       fullScreen: false,
     };
 
+    console.log('App')
+
     this.toggleHidden = this.toggleHidden.bind(this);
     this.toggleFullScreen = this.toggleFullScreen.bind(this);
   }
@@ -30,7 +32,7 @@ export default class App extends React.Component<Props, any>{
     window.addEventListener('resize', () => {
         this.setState({
           fullScreen: window.innerWidth < 800
-        });
+        }, () => console.log(this.state.fullScreen));
     }, true);
   }
 
@@ -38,16 +40,15 @@ export default class App extends React.Component<Props, any>{
     this.setState({
       behavior: {
         showChat: !this.state.behavior.showChat
-      }
+      },
+      isOpen: !this.state.isOpen
     })
   }
 
   toggleFullScreen() {
     this.setState({
       fullScreen: !this.state.fullScreen
-    }), (
-      console.log(this.state.fullScreen)
-    )
+    })
   }
 
   render() {
@@ -57,14 +58,14 @@ export default class App extends React.Component<Props, any>{
           <Chat
             endPoint="http://7afdf60ce1d5.ngrok.io/io/app/truc_test/web"
             referralParameter='referralParameter'
-            timeoutBetweenMessage={1.5}
+            timeoutBetweenMessage={0}
             title="Chatbot MGEN"
             showChat={this.state.behavior.showChat}
             fullScreen={this.state.fullScreen}
             toggleFullScreen={this.toggleFullScreen}
             toggleChat={this.toggleHidden}
-          />
-          {!this.state.behavior.showChat && !this.state.fullScreen && <Launcher
+          /> 
+          <Launcher
             launcherLabel={this.state.behavior.showChat}
             showChat={this.toggleHidden}
             fullScreen={this.state.fullScreen}
@@ -73,7 +74,7 @@ export default class App extends React.Component<Props, any>{
             fullScreenMode={props.fullScreenMode}
             tooltipPayload={props.tooltipPayload}
             */
-          />}
+          />
         </TockContext>
       </div>
     )

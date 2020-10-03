@@ -13,6 +13,7 @@ import * as actionTypes from './actionTypes';
 export const TockStateContext: Context<TockState | undefined> = createContext<
   TockState | undefined
 >(undefined);
+
 export const TockStateDispatch: Context<
   Dispatch<TockAction> | undefined
 > = createContext<Dispatch<TockAction> | undefined>(undefined);
@@ -163,7 +164,6 @@ export interface WidgetData {
 
 export interface BehaviorState {
   showChat: boolean;
-  disabledInput: boolean;
 }
 
 export interface TockState {
@@ -181,7 +181,6 @@ export interface TockAction {
     | 'ADD_MESSAGE'
     | 'SET_LOADING'
     | 'SET_SSE_INITIALIZING'
-    | 'SET_STYLE';
   quickReplies?: QuickReply[];
   messages?: (Message | Card | CalendarGraphCard | Carousel | Widget)[];
   loading?: boolean;
@@ -246,9 +245,10 @@ const TockContext: (props: { children?: ReactNode }) => JSX.Element = ({
       sseInitializing: false,
       behavior: {
         showChat: true,
-        disabledInput: false,
       },
+    
     },
+
   );
   return (
     <TockStateContext.Provider value={state}>
@@ -256,7 +256,8 @@ const TockContext: (props: { children?: ReactNode }) => JSX.Element = ({
         {children}
       </TockStateDispatch.Provider>
     </TockStateContext.Provider>
-  );
-};
+    )
+  }
+
 
 export default TockContext;

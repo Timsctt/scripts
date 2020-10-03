@@ -10,7 +10,7 @@ import { insufficientParameters, mongoError, successResponse, failureResponse } 
  */
 export const showMessages = (req: Request, res: Response) => {
 
-    Message.find().where('owner').equals(req.params.userId).limit(10).exec((err: any, message: any) => {
+    Message.find().where('owner').equals(req.params.userId).sort('-date').limit(10).exec((err: any, message: any) => {
         try {
             res.status(200).send(message);
         } catch (err) {
@@ -26,7 +26,6 @@ export const showMessages = (req: Request, res: Response) => {
  */
 export const addMessages = (req: Request, res: Response) => {
 
-    console.log(req.body)
     const response = new Message(req.body);
     console.log(response)
 

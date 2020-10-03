@@ -15,16 +15,14 @@ import {
   useTockState,
   Widget,
   WidgetData,
-  BehaviorState
 } from './TockContext';
 import { Sse } from './Sse';
 import AccessToken, { getAccessToken } from './AccessToken';
 
-export interface UseTock {
+export interface IUseTock {
   messages: (Message | Card | CalendarGraphCard | Carousel | Widget)[];
   quickReplies: QuickReply[];
   loading: boolean;
-  behavior: BehaviorState
   loadMessages: () => void;
   addMessage: (
     message: string,
@@ -91,14 +89,22 @@ function mapCalendarGraphCard(calendarGraphCard: any): CalendarGraphCard {
   } as CalendarGraphCard;
 }
 
-const useTock: (tockEndPoint: string) => UseTock = (tockEndPoint: string) => {
+// class UseTock implements IUseTock {
+  
+//   private tockEndPoint: string;
+  
+//   constructor(tockEndPoint: string) {
+//     this.tockEndPoint = tockEndPoint;
+//   }
+
+// }
+const UseTock: (tockEndPoint: string) => IUseTock = (tockEndPoint: string) => {
   const {
     messages,
     quickReplies,
     userId,
     loading,
     sseInitializing,
-    behavior,
   }: TockState = useTockState();
 
   const dispatch: Dispatch<TockAction> = useTockDispatch();
@@ -112,6 +118,13 @@ const useTock: (tockEndPoint: string) => UseTock = (tockEndPoint: string) => {
     });
   };
 
+  /* function startLoading() {
+    dispatch({
+      type: 'SET_LOADING',
+      loading: true,
+    });
+  } */
+
   const stopLoading: () => void = () => {
     dispatch({
       type: 'SET_LOADING',
@@ -121,11 +134,11 @@ const useTock: (tockEndPoint: string) => UseTock = (tockEndPoint: string) => {
 
 
   const loadMessages: () => void = () => {
-    fetch("http://localhost:3001/messages/" + userId)
+    fetch(endpointMessage + "/" + userId)
     .then(responses => responses.json())
     .then(function(responses) {
 
-      responses.forEach(responses => {
+      responses.reverse().forEach(responses => {
         if(responses["responses"].length > 0 ) {
           const lastMessage: any = responses["responses"][responses["responses"].length - 1];
           dispatch({
@@ -471,17 +484,6 @@ const useTock: (tockEndPoint: string) => UseTock = (tockEndPoint: string) => {
     [],
   );
 
-  /*
-  const toggleChat: (state: string) => void = useCallback(
-    (state: number) =>
-      dispatch({
-        type: 'SET_STYLE',
-
-      }),
-    [],
-  );
-  */
-
   const sseInitPromise = Sse.init(
     tockEndPoint,
     userId,
@@ -506,8 +508,7 @@ const useTock: (tockEndPoint: string) => UseTock = (tockEndPoint: string) => {
     loadMessages,
     sseInitPromise,
     sseInitializing,
-    behavior
   };
 };
 
-export default useTock;
+export default UseTock;

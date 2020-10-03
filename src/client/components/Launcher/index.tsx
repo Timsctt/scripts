@@ -19,6 +19,7 @@ export default class Launcher extends React.Component<Props>  {
   }
 
   render() {
+
     return (
       <button
         type="button"
