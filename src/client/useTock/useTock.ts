@@ -10,14 +10,14 @@ import {
   TockAction,
   TockState,
   UrlButton,
-  UrlButtonGraphSignIn,
+  UrlButtonGraphLogin,
   useTockDispatch,
   useTockState,
   Widget,
   WidgetData,
 } from './TockContext';
 import { Sse } from './Sse';
-import AccessToken, { getAccessToken } from './AccessToken';
+import AccessToken, { getAccessToken, isAuthenticated } from './AccessToken';
 
 export interface IUseTock {
   messages: (Message | Card | CalendarGraphCard | Carousel | Widget)[];
@@ -60,8 +60,8 @@ function mapButton(button: any): Button {
     return new PostBackButton(button.title, button.payload);
   } else if (button.type === 'quick_reply') {
     return new QuickReply(button.title, button.payload);
-  } else if (button.type === 'graph_sign_in') {
-    return new UrlButtonGraphSignIn(button.title, button.url);
+  } else if (button.type === 'login') {
+    return new UrlButtonGraphLogin(button.title, button.url);
   } else {
     return new UrlButton(button.title, button.url);
   }
@@ -103,6 +103,7 @@ const UseTock: (tockEndPoint: string) => IUseTock = (tockEndPoint: string) => {
     messages,
     quickReplies,
     userId,
+    codeUser,
     loading,
     sseInitializing,
   }: TockState = useTockState();
@@ -274,10 +275,7 @@ const UseTock: (tockEndPoint: string) => IUseTock = (tockEndPoint: string) => {
       }),
     [],
   );
-
-  //Todo bien le placer
-  getAccessToken();
-
+  
   const sendMessage: (
     message: string,
     payload?: string,
@@ -295,7 +293,7 @@ const UseTock: (tockEndPoint: string) => IUseTock = (tockEndPoint: string) => {
       : {
         query: message,
         userId,
-        code: AccessToken.accessToken,
+        code: AccessToken.accessToken
       };
     const msg: Object = {
       message: {
@@ -356,9 +354,10 @@ const UseTock: (tockEndPoint: string) => IUseTock = (tockEndPoint: string) => {
   const sendAction: (button: Button) => Promise<void> = (button: Button) => {
     if (button instanceof UrlButton) {
       window.open(button.url, '_blank');
-    } else if (button instanceof UrlButtonGraphSignIn) {
-      // Open little window popup for user registration
-      getAccessToken();
+    } else if (button instanceof UrlButtonGraphLogin) {
+      // Open popup for user login
+      getAccessToken()
+      console.log(AccessToken.accessToken)
     } else {
       return sendMessage(button.label, button.payload);
     }

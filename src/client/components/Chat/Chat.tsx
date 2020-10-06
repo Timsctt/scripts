@@ -39,6 +39,7 @@ export interface ChatProps {
   title: string;
   showChat: boolean;
   fullScreen: boolean;
+  isAuthenticated: boolean;
   toggleFullScreen: () => void;
   toggleChat: () => void;
 }
@@ -93,6 +94,7 @@ const Chat: (props: ChatProps) => JSX.Element = ({
   title,
   showChat,
   fullScreen,
+  isAuthenticated,
   toggleFullScreen,
   toggleChat,
 }: ChatProps) => {

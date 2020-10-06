@@ -22,13 +22,11 @@ export default class App extends React.Component<Props, any>{
       fullScreen: false,
     };
 
-    console.log('App')
-
     this.toggleHidden = this.toggleHidden.bind(this);
     this.toggleFullScreen = this.toggleFullScreen.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount():void {
     window.addEventListener('resize', () => {
         this.setState({
           fullScreen: window.innerWidth < 800
@@ -36,7 +34,7 @@ export default class App extends React.Component<Props, any>{
     }, true);
   }
 
-  toggleHidden() {
+  toggleHidden():void {
     this.setState({
       behavior: {
         showChat: !this.state.behavior.showChat
@@ -45,10 +43,14 @@ export default class App extends React.Component<Props, any>{
     })
   }
 
-  toggleFullScreen() {
+  toggleFullScreen():void {
     this.setState({
       fullScreen: !this.state.fullScreen
     })
+  }
+
+  isAuthenticated(): boolean {
+    return false
   }
 
   render() {
@@ -56,7 +58,7 @@ export default class App extends React.Component<Props, any>{
       <div className={`app-container mgen-chat-module ${this.state.fullScreen? "mgen-chat-fullscreen" : "app-container-reduce"}`}>
         <TockContext>
           <Chat
-            endPoint="http://7afdf60ce1d5.ngrok.io/io/app/truc_test/web"
+            endPoint="http://06707e408a25.ngrok.io/io/app/truc_test/web"
             referralParameter='referralParameter'
             timeoutBetweenMessage={0}
             title="Chatbot MGEN"
@@ -64,6 +66,7 @@ export default class App extends React.Component<Props, any>{
             fullScreen={this.state.fullScreen}
             toggleFullScreen={this.toggleFullScreen}
             toggleChat={this.toggleHidden}
+            isAuthenticated={this.isAuthenticated()}
           /> 
           <Launcher
             launcherLabel={this.state.behavior.showChat}

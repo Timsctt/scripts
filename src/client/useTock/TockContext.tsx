@@ -66,13 +66,13 @@ export class UrlButton {
   }
 }
 
-export class UrlButtonGraphSignIn {
+export class UrlButtonGraphLogin{
   label: string;
-  url: string;
+  login: string;
 
-  constructor(label: string, url: string) {
+  constructor(label: string, login: string) {
     this.label = label;
-    this.url = url;
+    this.login = login;
   }
 }
 
@@ -80,7 +80,7 @@ export type Button =
   | QuickReply
   | PostBackButton
   | UrlButton
-  | UrlButtonGraphSignIn;
+  | UrlButtonGraphLogin;
 
 export class SenderMail {
   name: string;
@@ -170,6 +170,7 @@ export interface TockState {
   quickReplies: QuickReply[];
   messages: (Message | Card | CalendarGraphCard | Carousel | Widget)[];
   userId: string;
+  codeUser?: string;
   loading: boolean;
   sseInitializing: boolean;
   behavior: BehaviorState;

@@ -107,6 +107,7 @@ const ChatInput: (props: ChatInputProps) => JSX.Element = ({
         className={disabled ? 'disabled-input' : undefined}
         value={value}
         onChange={({ target: { value } }) => setValue(value)}
+        placeholder="Ecrire ici"
       />
       <Icon>
         <Send size={16 * 1.5} />

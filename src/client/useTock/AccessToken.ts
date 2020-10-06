@@ -64,7 +64,11 @@ export function getAccessToken(): void {
           return msalInstance
             .acquireTokenPopup(loginRequest)
             .then((response) => {
-              console.log(response);
+              AccessToken.getInstance(
+                response.accessToken,
+                response.scopes,
+                response.expiresOn,
+              );
             })
             .catch((err) => {
               console.log(err);
@@ -75,15 +79,24 @@ export function getAccessToken(): void {
       });
   } else {
     // if the user is not logged set the scopes and open a popup
+      console.log("aaaavant")
     msalInstance
       .loginPopup(loginRequest)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((err) => {
-        console.log(err);
-        // TODO If user ClientAuthError: User cancelled the flow.
-        // TODO If user authentication failed.
-      });
+      .then(() => { 
+        if (msalInstance.getAccount()) {
+          msalInstance
+            .acquireTokenSilent(loginRequest)
+            .then((response) => {
+              AccessToken.getInstance(
+                response.accessToken,
+                response.scopes,
+                response.expiresOn,
+              );
+            })
+          }
+       })
+      console.log("aaaaaprèèss")
+
+    
   }
 }
