@@ -79,7 +79,6 @@ export function getAccessToken(): void {
       });
   } else {
     // if the user is not logged set the scopes and open a popup
-      console.log("aaaavant")
     msalInstance
       .loginPopup(loginRequest)
       .then(() => { 
@@ -93,10 +92,7 @@ export function getAccessToken(): void {
                 response.expiresOn,
               );
             })
-          }
-       })
-      console.log("aaaaaprèèss")
-
-    
+        }
+      })
   }
 }
