@@ -17,7 +17,7 @@ import {
   WidgetData,
 } from './TockContext';
 import { Sse } from './Sse';
-import AccessToken, { getAccessToken, isAuthenticated } from './AccessToken';
+import AccessToken, { checkLogin, getAccessToken } from './AccessToken';
 
 export interface IUseTock {
   messages: (Message | Card | CalendarGraphCard | Carousel | Widget)[];
@@ -103,7 +103,7 @@ const UseTock: (tockEndPoint: string) => IUseTock = (tockEndPoint: string) => {
     messages,
     quickReplies,
     userId,
-    codeUser,
+    codeUser = checkLogin(),
     loading,
     sseInitializing,
   }: TockState = useTockState();
@@ -119,6 +119,9 @@ const UseTock: (tockEndPoint: string) => IUseTock = (tockEndPoint: string) => {
     });
   };
 
+  if (codeUser) {
+    getAccessToken()
+  }
   /* function startLoading() {
     dispatch({
       type: 'SET_LOADING',

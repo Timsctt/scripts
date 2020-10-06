@@ -170,7 +170,7 @@ export interface TockState {
   quickReplies: QuickReply[];
   messages: (Message | Card | CalendarGraphCard | Carousel | Widget)[];
   userId: string;
-  codeUser?: string;
+  codeUser?: boolean;
   loading: boolean;
   sseInitializing: boolean;
   behavior: BehaviorState;

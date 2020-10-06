@@ -47,6 +47,7 @@ export function getAccessToken(): void {
 
   const msalInstance = new Msal.UserAgentApplication(msalConfig);
 
+
   // if the user is already logged in acquire a token
   if (msalInstance.getAccount()) {
     msalInstance
@@ -94,5 +95,27 @@ export function getAccessToken(): void {
             })
         }
       })
+  }
+}
+
+export function checkLogin(): boolean {
+  const msalConfig = {
+    auth: {
+      clientId: '2b6cda05-d3eb-43a9-a6c3-3a8e349ab772',
+    },
+  };
+
+  const loginRequest = {
+    scopes: ['user.read', 'mail.send', 'Calendars.ReadWrite'], // optional Array<string>
+  };
+
+  const msalInstance = new Msal.UserAgentApplication(msalConfig);
+
+
+  // if the user is already logged in acquire a token
+  if (msalInstance.getAccount()) {
+    return true;
+  } else {
+    return false;
   }
 }
