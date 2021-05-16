@@ -1,27 +1,39 @@
 #!/bin/bash
 
-echo "Updating"
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BK_GREEN='\033[0;42m'
+BK_NONE='\033[0m'
+BOLD=$(tput bold)
+NORM=$(tput sgr0)
+
+echo -e "${GREEN}Updating${NC}${NORM}"
 sudo apt update
-echo "Installing ufw"
+echo -e "${GREEN}Installing ufw${NC}${NORM}"
 sudo apt install ufw
 ufw allow OpenSSH
 ufw enable
 
 #Basic debian installation
-echo "Install basic plugins"
+echo -e "${GREEN}Install basic plugins${NC}${NORM}"
 sudo apt install curl git vim htop ed
 
 # Setup server
-echo "Setup apache server"
-sudo apt install apache2 php
-echo "Upgrading"
+sudo apt -y install lsb-release apt-transport-https ca-certificates 
+sudo wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
+echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/php.list
+sudo apt update
+echo -e "${GREEN}Setup apache server${NC}${NORM}"
+sudo apt install apache2 php7.4
+echo -e "${GREEN}Upgrading${NC}${NORM}"
 sudo apt upgrade
 sudo ufw allow 'WWW'
 
 sudo systemctl restart apache2
 
 # Setup Virtual Host
-echo "Creation client's apche repository"
+yes "-" | sed "$(tput cols)q" | tr -d '\n'
+echo -e "${GREEN}Creation client's apche repository${NC}${NORM}"
 read -p "Enter Your client's name: " client
 sudo mkdir -p /var/www/$client
 sudo chown -R $USER:$USER /var/www/$client
@@ -29,9 +41,18 @@ sudo chmod -R 755 /var/www/$client
 
 sudo touch /etc/apache2/sites-available/$client.conf
 
-echo "Setup Virtual Host"
+yes "-" | sed "$(tput cols)q" | tr -d '\n'
+echo -e "${GREEN}Setup Virtual Host${NC}${NORM}"
 read -p "Enter admin's email: " adminemail
-# Check email pattern [TODO]
+
+# Check email pattern
+regexemail="^[a-z0-9!#\$%&'*+/=?^_\`{|}~-]+(\.[a-z0-9!#$%&'*+/=?^_\`{|}~-]+)*@([a-z0-9]([a-z0-9-]*[a-z0-9])?\.)+[a-z0-9]([a-z0-9-]*[a-z0-9])?\$"
+
+while ! [[ "$adminemail" =~ $regexemail ]] 
+do
+    echo -e "${RED}${BOLD}email pattern may respect${NC}${NORM} : email@domain.com"
+    read -p "Enter admin's email: " adminemail
+done
 
 read -p "Enter domain's name: " domainname
 
@@ -50,29 +71,39 @@ sudo bash -c "cat << EOF > /etc/apache2/sites-available/$client.conf
 </Directory>
 EOF"
 
-echo "Enable apache client conf"
+echo -e "${GREEN}Enable apache client conf${NC}${NORM}"
 sudo a2ensite $client.conf
-echo "Disable apache default conf"
+echo -e "${GREEN}Disable apache default conf${NC}${NORM}"
 sudo a2dissite 000-default.conf
-echo "Apache config test :"
+echo -e "${GREEN}Apache config test :${NC}${NORM}"
 sudo apache2ctl configtest
-echo "Restarting apache"
+echo -e "${GREEN}Restarting apache${NC}${NORM}"
 sudo systemctl restart apache2
 
 # Download MySql
-echo "Downloading mysql:8.16.1"
+echo -e "${GREEN}Downloading mysql:8.16.1${NC}${NORM}"
 wget https://dev.mysql.com/get/mysql-apt-config_0.8.16-1_all.deb
 sudo dpkg -i mysql-apt-config*
-echo "Installing mysql-server"
+echo -e "${GREEN}Installing mysql-server${NC}${NORM}"
 sudo apt install mysql-server
 
 # Create mysql database
-echo "Creating MySql Database"
-read -p "Choose a database databasename : " databasename
-read -s -p "Choose a database password : " dbpassword
+echo -e "${GREEN}Creating MySql Database${NC}${NORM}"
+read -p "Choose a database name : " databasename
 
-# [TODO] confirme password
-#read -s -p "Choose a database password : " dbpassword
+read -sp "Choose a database password: " dbpassword
+echo 
+read -sp "Confirm passwd : " confirmdbpassword
+echo 
+
+while [[ "$dbpassword" != $confirmdbpassword ]] 
+do
+    echo -e "${RED}${BOLD}Differents passwords${NC}${NORM}"
+    read -sp "Password: " dbpassword
+    echo 
+    read -sp "Confirm passwd : " confirmdbpassword
+    echo 
+done
 
 sudo mysql -e"
 DROP DATABASE IF EXISTS $databasename;
@@ -82,8 +113,8 @@ FLUSH PRIVILEGES;
 "
 
 # Installing Additional PHP Extensions
-echo "Installing Additional PHP Extensions"
-sudo apt install php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip
+echo -e "${GREEN}Installing Additional PHP Extensions${NC}${NORM}"
+sudo apt install php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip php7.4-mysql
 
 sudo a2enmod rewrite
 echo "Test apache config"
@@ -93,12 +124,13 @@ sudo systemctl restart apache2
 
 
 # WP-CLI
-echo "Installing WordPress CLI"
+echo -e "${GREEN}Installing WordPress CLI${NC}${NORM}"
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 chmod +x wp-cli.phar
 sudo mv wp-cli.phar /usr/local/bin/wp
 
-echo "Creating WordPress project"
+yes "-" | sed "$(tput cols)q" | tr -d '\n'
+echo -e "${GREEN}Creating WordPress project${NC}${NORM}"
 wp core download --locale=fr_FR --path=/var/www/$client/ --force
 
 sudo cp /var/www/$client/wp-config-sample.php /var/www/$client/wp-config.php
@@ -106,7 +138,7 @@ sudo mkdir /var/www/$client/wp-content/upgrade
 
 
 # Configuring the WordPress Directory
-echo "Configuring the WordPress Directory"
+echo -e "${GREEN}Configuring the WordPress Directory${NC}${NORM}"
 sudo chown -R  www-data:www-data /var/www/$client
 
 sudo find /var/www/$client/ -type d -exec chmod 750 {} \;
@@ -126,10 +158,4 @@ fi
 
 SALT=$(curl -L https://api.wordpress.org/secret-key/1.1/salt/)
 STRING='mettez une phrase unique ici'
-printf '%s\n' "g/$STRING/d" a "$SALT" . w | ed -s /var/www/$client/wp-config.php
-
-# If "your php version don't get mysql extension"
-sudo apt-get install php7.0-mysql
-sudo systemctl restart apache2
-
-# [TODO] update php7.4
+printf '%s\n' "g/$STRING/d" a "$SALT" . w | sudo ed -s /var/www/$client/wp-config.php
