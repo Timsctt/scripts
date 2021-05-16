@@ -7,15 +7,15 @@ BK_NONE='\033[0m'
 BOLD=$(tput bold)
 NORM=$(tput sgr0)
 
-echo -e "${GREEN}Updating${NC}${NORM}"
+echo -e "${GREEN}Updating${NORM}"
 sudo apt update
-echo -e "${GREEN}Installing ufw${NC}${NORM}"
+echo -e "${GREEN}Installing ufw${NORM}"
 sudo apt install ufw
 ufw allow OpenSSH
 ufw enable
 
-#Basic debian installation
-echo -e "${GREEN}Install basic plugins${NC}${NORM}"
+#Basic debian plugins installation
+echo -e "${GREEN}Install basic plugins${NORM}"
 sudo apt install curl git vim htop ed
 
 # Setup server
@@ -23,9 +23,9 @@ sudo apt -y install lsb-release apt-transport-https ca-certificates
 sudo wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
 echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/php.list
 sudo apt update
-echo -e "${GREEN}Setup apache server${NC}${NORM}"
+echo -e "${GREEN}Setup apache server${NORM}"
 sudo apt install apache2 php7.4
-echo -e "${GREEN}Upgrading${NC}${NORM}"
+echo -e "${GREEN}Upgrading${NORM}"
 sudo apt upgrade
 sudo ufw allow 'WWW'
 
@@ -33,7 +33,7 @@ sudo systemctl restart apache2
 
 # Setup Virtual Host
 yes "-" | sed "$(tput cols)q" | tr -d '\n'
-echo -e "${GREEN}Creation client's apche repository${NC}${NORM}"
+echo -e "${GREEN}Creation client's apche repository${NORM}"
 read -p "Enter Your client's name: " client
 sudo mkdir -p /var/www/$client
 sudo chown -R $USER:$USER /var/www/$client
@@ -42,7 +42,7 @@ sudo chmod -R 755 /var/www/$client
 sudo touch /etc/apache2/sites-available/$client.conf
 
 yes "-" | sed "$(tput cols)q" | tr -d '\n'
-echo -e "${GREEN}Setup Virtual Host${NC}${NORM}"
+echo -e "${GREEN}Setup Virtual Host${NORM}"
 read -p "Enter admin's email: " adminemail
 
 # Check email pattern
@@ -71,24 +71,24 @@ sudo bash -c "cat << EOF > /etc/apache2/sites-available/$client.conf
 </Directory>
 EOF"
 
-echo -e "${GREEN}Enable apache client conf${NC}${NORM}"
+echo -e "${GREEN}Enable apache client conf${NORM}"
 sudo a2ensite $client.conf
-echo -e "${GREEN}Disable apache default conf${NC}${NORM}"
+echo -e "${GREEN}Disable apache default conf${NORM}"
 sudo a2dissite 000-default.conf
-echo -e "${GREEN}Apache config test :${NC}${NORM}"
+echo -e "${GREEN}Apache config test :${NORM}"
 sudo apache2ctl configtest
-echo -e "${GREEN}Restarting apache${NC}${NORM}"
+echo -e "${GREEN}Restarting apache${NORM}"
 sudo systemctl restart apache2
 
 # Download MySql
-echo -e "${GREEN}Downloading mysql:8.16.1${NC}${NORM}"
+echo -e "${GREEN}Downloading mysql:8.16.1${NORM}"
 wget https://dev.mysql.com/get/mysql-apt-config_0.8.16-1_all.deb
 sudo dpkg -i mysql-apt-config*
-echo -e "${GREEN}Installing mysql-server${NC}${NORM}"
+echo -e "${GREEN}Installing mysql-server${NORM}"
 sudo apt install mysql-server
 
 # Create mysql database
-echo -e "${GREEN}Creating MySql Database${NC}${NORM}"
+echo -e "${GREEN}Creating MySql Database${NORM}"
 read -p "Choose a database name : " databasename
 
 read -sp "Choose a database password: " dbpassword
@@ -113,7 +113,7 @@ FLUSH PRIVILEGES;
 "
 
 # Installing Additional PHP Extensions
-echo -e "${GREEN}Installing Additional PHP Extensions${NC}${NORM}"
+echo -e "${GREEN}Installing Additional PHP Extensions${NORM}"
 sudo apt install php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip php7.4-mysql
 
 sudo a2enmod rewrite
@@ -124,13 +124,13 @@ sudo systemctl restart apache2
 
 
 # WP-CLI
-echo -e "${GREEN}Installing WordPress CLI${NC}${NORM}"
+echo -e "${GREEN}Installing WordPress CLI${NORM}"
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 chmod +x wp-cli.phar
 sudo mv wp-cli.phar /usr/local/bin/wp
 
 yes "-" | sed "$(tput cols)q" | tr -d '\n'
-echo -e "${GREEN}Creating WordPress project${NC}${NORM}"
+echo -e "${GREEN}Creating WordPress project${NORM}"
 wp core download --locale=fr_FR --path=/var/www/$client/ --force
 
 sudo cp /var/www/$client/wp-config-sample.php /var/www/$client/wp-config.php
@@ -138,7 +138,7 @@ sudo mkdir /var/www/$client/wp-content/upgrade
 
 
 # Configuring the WordPress Directory
-echo -e "${GREEN}Configuring the WordPress Directory${NC}${NORM}"
+echo -e "${GREEN}Configuring the WordPress Directory${NORM}"
 sudo chown -R  www-data:www-data /var/www/$client
 
 sudo find /var/www/$client/ -type d -exec chmod 750 {} \;
