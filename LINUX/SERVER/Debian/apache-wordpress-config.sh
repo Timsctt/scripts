@@ -108,7 +108,8 @@ done
 sudo mysql -e"
 DROP DATABASE IF EXISTS $databasename;
 CREATE DATABASE $databasename DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
-GRANT ALL ON $databasename.* TO '$USER'@'localhost' IDENTIFIED BY '$dbpassword';
+CREATE USER '$USER'@'localhost' IDENTIFIED BY '$dbpassword';
+GRANT ALL ON $databasename.* TO '$USER'@'localhost';
 FLUSH PRIVILEGES;
 "
 
