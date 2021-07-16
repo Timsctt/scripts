@@ -16,6 +16,8 @@ services:
             MYSQL_PASSWORD: pass
         ports:
             - 3306:3306
+        networks:
+            - mysql_network
 
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
@@ -25,7 +27,11 @@ services:
             - db
         environment:
             PMA_HOST: db
-            PMA_PORT: 3306
-            PMA_ARBITRARY: 1
         ports:
             - 8080:80
+        networks:
+            - mysql_network
+
+networks:
+    mysql_network:
+        name: mysql_network
