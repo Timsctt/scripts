@@ -82,8 +82,9 @@ sudo systemctl restart apache2
 
 # Download MySql
 echo -e "${GREEN}Downloading mysql:8.16.1${NORM}"
-wget https://dev.mysql.com/get/mysql-apt-config_0.8.16-1_all.deb
-sudo dpkg -i mysql-apt-config*
+sudo apt install mariadb-server
+sudo mysql_secure_installation
+
 echo -e "${GREEN}Installing mysql-server${NORM}"
 sudo apt install mysql-server
 
