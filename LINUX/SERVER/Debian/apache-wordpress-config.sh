@@ -116,7 +116,7 @@ FLUSH PRIVILEGES;
 
 # Installing Additional PHP Extensions
 echo -e "${GREEN}Installing Additional PHP Extensions${NORM}"
-sudo apt install php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip php7.4-mysql php7.4-xml
+sudo apt install php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip php7.4-mysql php7.4-xml php7.4-curl php7.4-gd php7.4-zip
 
 sudo a2enmod rewrite
 echo "Test apache config"
