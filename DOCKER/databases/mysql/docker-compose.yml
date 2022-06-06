@@ -27,6 +27,8 @@ services:
             - db
         environment:
             PMA_HOST: db
+            PMA_USER: user
+            PMA_PASSWORD: pass
         ports:
             - 8080:80
         networks:
