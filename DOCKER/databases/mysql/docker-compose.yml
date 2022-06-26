@@ -20,7 +20,7 @@ services:
             - mysql_network
 
     phpmyadmin:
-        image: phpmyadmin/phpmyadmin
+        image: phpmyadmin
         restart: always
         container_name: pma
         depends_on:
@@ -31,6 +31,21 @@ services:
             PMA_PASSWORD: pass
         ports:
             - 8080:80
+        networks:
+            - mysql_network
+
+    phpmyadmin_admin:
+        image: phpmyadmin
+        restart: always
+        container_name: pma_admin
+        depends_on:
+            - db
+        environment:
+            PMA_HOST: db
+            PMA_USER: root
+            PMA_PASSWORD: root
+        ports:
+            - 8081:80
         networks:
             - mysql_network
 
