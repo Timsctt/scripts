@@ -16,15 +16,15 @@ ufw enable
 
 #Basic debian plugins installation
 echo -e "${GREEN}Install basic plugins${NORM}"
-sudo apt install curl git vim htop ed
+sudo apt install -y curl git vim htop ed
 
 # Setup server
-sudo apt -y install lsb-release apt-transport-https ca-certificates 
+sudo apt install -y lsb-release apt-transport-https ca-certificates 
 sudo wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
 echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/php.list
 sudo apt update
 echo -e "${GREEN}Setup apache server${NORM}"
-sudo apt install apache2 php7.4
+sudo apt install -y apache2 php7.4
 echo -e "${GREEN}Upgrading${NORM}"
 sudo apt upgrade
 sudo ufw allow 'WWW'
@@ -82,11 +82,11 @@ sudo systemctl restart apache2
 
 # Download MySql
 echo -e "${GREEN}Downloading mysql:8.16.1${NORM}"
-sudo apt install mariadb-server
+sudo apt install -y mariadb-server
 sudo mysql_secure_installation
 
 echo -e "${GREEN}Installing mysql-server${NORM}"
-sudo apt install mysql-server
+sudo apt -y mysql-server
 
 # Create mysql database
 echo -e "${GREEN}Creating MySql Database${NORM}"
@@ -116,7 +116,7 @@ FLUSH PRIVILEGES;
 
 # Installing Additional PHP Extensions
 echo -e "${GREEN}Installing Additional PHP Extensions${NORM}"
-sudo apt install php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip php7.4-mysql php7.4-xml php7.4-curl php7.4-gd php7.4-zip
+sudo apt -y php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip php7.4-mysql php7.4-xml php7.4-curl php7.4-gd php7.4-zip
 
 sudo a2enmod rewrite
 echo "Test apache config"
