@@ -44,6 +44,7 @@ services:
             PMA_HOST: db
             PMA_USER: root
             PMA_PASSWORD: root
+            UPLOAD_LIMIT: 300M
         ports:
             - 8081:80
         networks:
