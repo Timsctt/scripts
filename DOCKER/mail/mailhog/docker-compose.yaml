@@ -1,0 +1,15 @@
+# Use root/example as user/password credentials
+version: "3.1"
+
+services:
+    mailhog:
+      image: mailhog/mailhog
+      container_name: 'mailhog'
+      ports:
+        - "1025:1025"
+        - "8025:8025"
+
+networks:
+    default:
+        external: true
+        name: your_network
