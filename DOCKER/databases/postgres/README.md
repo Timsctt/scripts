@@ -36,6 +36,18 @@ For instance, if you have a network named prisma_default, you would modify the D
 docker run -p 5050:80 -d --rm --name pgadmin --network prisma_default -e PGADMIN_DEFAULT_EMAIL=admin@admin.com -e PGADMIN_DEFAULT_PASSWORD=password -e PGADMIN_LISTEN_PORT=80 -e HKEY_CLASSES_ROOT=text/javascript dpage/pgadmin4
 ```
 
+## PGAdmin Connection Settings
+When connecting to a database running inside another Docker container from PGAdmin, you'll need to use the Docker network's Gateway IP, not localhost or 127.0.0.1.
+  1. Log in to the PGAdmin web interface.
+  2. Right-click on "Servers" in the left sidebar, then select "Create" > "Server".
+  3. In the "General" tab, provide a name for the connection.
+  4. Navigate to the "Connection" tab:
+    - Hostname/Address: Enter the Gateway IP of the Docker network where your database container is running. For example, if your database container's Gateway IP is 172.26.0.1, that's what you'd enter here.
+    - Port: Enter the port on which your database is listening. For PostgreSQL, it's usually 5432.
+    - Maintenance database, Username, and Password: These are specific to your database setup. Provide the necessary credentials.
+
+Remember, if your database is running in a Docker container and you're trying to access it from PGAdmin (also in a container), using localhost will refer to the PGAdmin's own container, not the host machine or the database container. Therefore, always use the Gateway IP for inter-container communication on the same Docker network.
+
 ## Note
 
 For a production environment, ensure to change the default email and password to more secure ones.
